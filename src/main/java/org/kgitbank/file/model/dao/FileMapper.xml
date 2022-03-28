@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mabatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.kgitbank.file.model.dao.IFileRepository">
+
+<!-- 
+	######FileVO
+	private int fileId;
+	private String directoryName;
+	private String fileName;
+	private long fileSize;
+	private String fileCounterType;
+	private Timestamp fileUploadDate;
+	private byte[] fileData;
+	
+	######IFileRepository
+	int getMaxFileId();
+	void uploadFile(FileVO file);
+	FileVO getFile(int fileId);
+ -->
+ 
+<select id="getMaxFileId" resultType="int">
+select nvl(max(file_id),0) from files
+<!-- nvl 최대값 뽑는 함수  -->
+</select>
+
+<insert id="uploadFile" parameterType="org.kgitbank.file.model.vo.FileVO">
+insert into files values(#{fileId}, #{directoryName}, #{fileName}, #{fileSize}, #{fileContentType}, sysdate, #{fileData})
+</insert>
+
+<select id="getFile" parameterType="int" resultType="org.kgitbank.file.model.vo.FileVO">
+select file_id as fileId, directory_name as directoryName, file_name as fileName, 
+file_size as fileSize, file_content_type as fileContentType, 
+file_upload_date as fileUploadDate, file_data as fileData 
+from files where file_id=#{fileId}
+</select>
+<!-- 쿼리작성문을 실행 시키기 위해 작성 후 servlet-context.xml 안에 작성 -->
+
+<select id="getAllFileList"  resultType="org.kgitbank.file.model.vo.FileVO">
+select file_id as fileId, directory_name as directoryName, file_name as fileName, 
+file_size as fileSize, file_content_type as fileContentType, 
+file_upload_date as fileUploadDate, file_data as fileData 
+from files
+</select>
+
+<select id="getFileListByDir" parameterType="string" resultType="org.kgitbank.file.model.vo.FileVO">
+select file_id as fileId, directory_name as directoryName, file_name as fileName, 
+file_size as fileSize, file_content_type as fileContentType, 
+file_upload_date as fileUploadDate, file_data as fileData 
+from files where directory_name=#{dir}
+</select>
+
+
+</mapper>
+
+
+
+
+
+
+
+
+
